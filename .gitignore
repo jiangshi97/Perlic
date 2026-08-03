@@ -1,0 +1,7 @@
+.vscode/
+build/
+linshi
+qemu-debug-log
+*.o
+*.iso
+target/live/kernel
