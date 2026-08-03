@@ -1,0 +1,17 @@
+# 内存配置
+megs: 32
+
+# BIOS 和 VGA ROM 路径（请根据实际安装路径修改）
+romimage: file=/home/he/code/bochss/bochs-2.6.8/bios/BIOS-bochs-latest
+vgaromimage: file=/home/he/code/bochss/bochs-2.6.8/bios/VGABIOS-lgpl-latest
+
+# 启动设备：设置为从光驱 (CDROM) 启动
+boot: cdrom
+
+# 磁盘/光驱配置：将你的 ISO 镜像挂载为光驱
+ata0-master: type=cdrom, path="/home/he/code/Perlic/build/my_os.iso", status=inserted
+
+# 调试选项：启用魔术断点（可选）
+#magic_break: enabled=1
+
+com1: enabled=1, mode=term, dev=/dev/tty5

@@ -1,0 +1,1 @@
+#define debug_bochs() __asm__ __volatile__("xchgw %bx, %bx")

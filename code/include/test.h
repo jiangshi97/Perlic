@@ -1,0 +1,1 @@
+void trigger_nmi_rtc(void);
