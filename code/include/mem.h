@@ -12,6 +12,7 @@
 #include <stdint.h>
 
 #define max_page_num (16 * 1024 / 2)
+#define first_page 13
 
 #define page_free 0
 #define page_allocated 1
@@ -42,7 +43,7 @@ typedef struct
 typedef struct
 {
     MemPage pages[8];
-    uint64_t bits_map;
+    uint64_t bits_map;  //00:not on page_table 01:not allocated 02:os 03:application
 } MemPages;
 
 

@@ -44,7 +44,7 @@ void mem_init(uint64_t mem_info_size, MemInf mem_inf[])
                     MainPages[b].ref_count = 0;
                 }
                 
-                for(uint64_t b = 0; b < 13; b++)
+                for(uint64_t b = 0; b < os_first_page; b++)
                 {
                     kdPages[b / 8].pages[b % 8].ptr_page = &(MainPages[b]);
                     kdPages[b / 8].pages[b % 8].virt_addr = MainPages[b].phy_addr;
@@ -53,11 +53,11 @@ void mem_init(uint64_t mem_info_size, MemInf mem_inf[])
                     kuPages[b / 8].pages[b % 8].virt_addr = MainPages[b].phy_addr + 0xffff800000000000;
                     kuPages[b / 8].pages[b % 8].attribute = page_allocated;
                 }
-                kdPages[0].bits_map = 0x0101010101010101ULL;
+                kdPages[0].bits_map = 0x0202020202010101ULL;
                 kdPages[1].bits_map = 0x0101010101000000ULL;
-                kuPages[0].bits_map = 0x0101010101010101ULL;
+                kuPages[0].bits_map = 0x0202020202010101ULL;
                 kuPages[1].bits_map = 0x0101010101000000ULL;
-                for(uint64_t b = 13; b < max_page_num; b++)
+                for(uint64_t b = os_first_page; b < max_page_num; b++)
                 {
                     kdPages[b / 8].pages[b % 8].attribute = page_free;
                     kuPages[b / 8].pages[b % 8].attribute = page_free;

@@ -7,6 +7,7 @@
 #include "test.h"
 #include "gate.h"
 #include "mem.h"
+#include "memlib.h"
 
 #define KerSucces 0
 #define LoadErr 1

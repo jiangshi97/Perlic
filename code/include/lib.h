@@ -13,7 +13,7 @@ do{									\
 }while(0)
 #define max_num(a,b) ((a > b)?(a):(b))
 #define min_num(a,b) ((a < b)?(a):(b))
-#define align8(addr) ((((uintptr_t)addr) % 8 == 0)?(addr):((void *)((((uintptr_t)addr / 8) + 1) * 8)))
+#define align8(addr) ((((uintptr_t)addr) % 8 == 0)?((void *)addr):((void *)((((uintptr_t)addr / 8) + 1) * 8)))
 
 #define OS_SUCCES 0
 #define OS_FAILED 1	

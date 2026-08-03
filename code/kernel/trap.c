@@ -60,7 +60,7 @@ void do_stack_segment_fault(struct pt_regs * regs,unsigned long error_code)
 
 void do_general_protection(struct pt_regs * regs,unsigned long error_code)
 {
-	debug_printf("general_protection happen!! rip:0x%x\n",regs->rip);
+	debug_printf("general_protection happen!! rip:0x%x error code:0x%x\n",regs->rip,error_code);
 	while(1){asm_hlt();}
 }
 
