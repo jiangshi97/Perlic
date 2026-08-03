@@ -1,7 +1,7 @@
 .vscode/
 build/
 linshi
-qemu_debug_log
+qemu-debug-log
 *.o
 *.iso
 target/live/kernel
