@@ -6,6 +6,7 @@
 #include "trap.h"
 #include "test.h"
 #include "gate.h"
+#include "mem.h"
 
 #define KerSucces 0
 #define LoadErr 1
@@ -24,6 +25,15 @@ BootInf bootinfs;
 void prttt(void)
 {
     serial_printf("WAN DAN LA!!!\n");
+}
+void IntInit()
+{
+    #define _stack_start 0xffff800000007e00
+    set_tss_to_gdt(GDT_Table, TSS64_Table, 10, 26 * sizeof(unsigned int));
+    load_TR(10);
+    set_tss64(_stack_start, _stack_start, _stack_start, 0xffff800000007c00, 0xffff800000007c00, 0xffff800000007c00, 0xffff800000007c00, 0xffff800000007c00, 0xffff800000007c00, 0xffff800000007c00);
+
+    sys_vector_init();
 }
 void KernelMain(void)
 {
@@ -44,12 +54,10 @@ void KernelMain(void)
     {
         KerErr(Status);
     }
-    #define _stack_start 0xffff800000007e00
-    set_tss_to_gdt(GDT_Table, TSS64_Table, 10, 26 * sizeof(unsigned int));
-    load_TR(10);
-    set_tss64(_stack_start, _stack_start, _stack_start, 0xffff800000007c00, 0xffff800000007c00, 0xffff800000007c00, 0xffff800000007c00, 0xffff800000007c00, 0xffff800000007c00, 0xffff800000007c00);
+    IntInit();
+    mem_init(bootinfs.mem_info_size, bootinfs.mem_info);
 
-    sys_vector_init();    
+    debug_printf("Kernel process sleep\n");
     while(1){asm_hlt();}
 }
 

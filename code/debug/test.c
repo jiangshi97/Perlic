@@ -4,6 +4,8 @@
 #define NMI_ENABLE_PORT 0x70
 #define NMI_REASON_PORT 0x61
 
+uint16_t ERR_CODE[max_process];
+
 // 触发NMI的函数
 void trigger_nmi_rtc(void) {
     // 可选：读取NMI原因

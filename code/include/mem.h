@@ -13,12 +13,30 @@
 
 #define max_page_num (16 * 1024 / 2)
 
+#define page_free 0
+#define page_allocated 1
+#define page_applied 2
+
+#define zone_free 0
+#define zone_reserved 1
+#define zone_acpi 2
+#define zone_hib 3
+#define zone_def 4
+
+#define os_first_page 5
+
 typedef struct
 {
     uintptr_t phy_addr;
-    uintptr_t virt_addr;
     uint64_t attribute;
     uint64_t ref_count;
+} pMemPage;
+
+typedef struct
+{
+    uintptr_t virt_addr;
+    uint64_t attribute;
+    pMemPage *ptr_page;
 } MemPage;
 
 typedef struct
@@ -33,7 +51,8 @@ typedef struct
     uintptr_t zone_addr;
     uint64_t page_num;
     uint64_t used_page_num;
-    MemPages *pages;
+    uint64_t attribute;
+    pMemPage *pages;
 } MemZone;
 
 void mem_init(uint64_t mem_info_size, MemInf mem_inf[]);

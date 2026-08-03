@@ -11,23 +11,23 @@ do{									\
 				:"a"(n << 3)				\
 				:"memory");				\
 }while(0)
+#define max_num(a,b) ((a > b)?(a):(b))
+#define min_num(a,b) ((a < b)?(a):(b))
+#define align8(addr) ((((uintptr_t)addr) % 8 == 0)?(addr):((void *)((((uintptr_t)addr / 8) + 1) * 8)))
+
+#define OS_SUCCES 0
+#define OS_FAILED 1	
+
+#define max_process 64
+
+
+typedef unsigned long long size_t;
 
 extern unsigned int TSS64_Table[26];
+extern uint16_t ERR_CODE[max_process];
 
-static inline int strlen(char * String)
-{
-	register int __res;
-	__asm__	__volatile__	(	"cld	\n\t"
-					"repne	\n\t"
-					"scasb	\n\t"
-					"notl	%0	\n\t"
-					"decl	%0	\n\t"
-					:"=c"(__res)
-					:"D"(String),"a"(0),"0"(0xffffffff)
-					:
-				);
-	return __res;
-}
+int strlen(char * String);
+
 
 static inline void outb(uint16_t port, uint8_t val) {
     asm volatile ( "outb %0, %1" : : "a"(val), "Nd"(port) );
@@ -39,30 +39,7 @@ static inline uint8_t inb(uint16_t port) {
     return ret;
 }
 
-static inline void *align8(void *addr) {
-	uintptr_t a = (uintptr_t)addr;
-	if(a % 8 ==0)
-	{
-		return addr;
-	}
-	else
-	{
-		return (void *)(((a / 8) + 1) * 8);
-	}
-}
+void set_tss64(unsigned long rsp0,unsigned long rsp1,unsigned long rsp2,unsigned long ist1,unsigned long ist2,unsigned long ist3,
+unsigned long ist4,unsigned long ist5,unsigned long ist6,unsigned long ist7);
 
-static inline void set_tss64(unsigned long rsp0,unsigned long rsp1,unsigned long rsp2,unsigned long ist1,unsigned long ist2,unsigned long ist3,
-unsigned long ist4,unsigned long ist5,unsigned long ist6,unsigned long ist7)
-{
-	*(unsigned long *)(TSS64_Table+1) = rsp0;
-	*(unsigned long *)(TSS64_Table+3) = rsp1;
-	*(unsigned long *)(TSS64_Table+5) = rsp2;
-
-	*(unsigned long *)(TSS64_Table+9) = ist1;
-	*(unsigned long *)(TSS64_Table+11) = ist2;
-	*(unsigned long *)(TSS64_Table+13) = ist3;
-	*(unsigned long *)(TSS64_Table+15) = ist4;
-	*(unsigned long *)(TSS64_Table+17) = ist5;
-	*(unsigned long *)(TSS64_Table+19) = ist6;
-	*(unsigned long *)(TSS64_Table+21) = ist7;	
-}
+uint16_t get_pid();
