@@ -1,7 +1,10 @@
 add_library(kernel_obj OBJECT
     gates.c
     trap.c
+    memlib.c
     mem.c
+    lib.c
+    klib.c
     traps.asm
     # ... 其他汇编文件
 )
