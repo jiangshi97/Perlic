@@ -1,6 +1,9 @@
 #pragma once
 
 #include <stdint.h>
+#include "serial.h"
+
+#define _OS_API     //This means the function will set err_code
 
 #define asm_hlt() __asm__ __volatile__("hlt \n\t")
 #define hlt_loop() while(1){asm_hlt();}
@@ -14,11 +17,37 @@ do{									\
 #define max_num(a,b) ((a > b)?(a):(b))
 #define min_num(a,b) ((a < b)?(a):(b))
 #define align8(addr) ((((uintptr_t)addr) % 8 == 0)?((void *)addr):((void *)((((uintptr_t)addr / 8) + 1) * 8)))
+#define aligns(addr, align_num) ((((uintptr_t)(addr)) % (1 << (align_num)) == 0)?((void *)(addr)):((void *)((((uintptr_t)(addr) / (1 << align_num)) + 1) * (1 << (align_num)))))
+
+
+#define VirToPhy(addr) ((void *)((uintptr_t)addr & 0x00007fffffffffff))
+#define PhyToVir(addr) ((void *)((uintptr_t)addr | 0xffff800000000000))
+#define VirPhyToEach(addr) ((addr >= 0xffff800000000000)?(VirToPhy(addr)):(PhyToVir(addr)))
+
+#define CheckWithRet(arg) do{ if(ERR_CODE[get_pid()] != OS_SUCCES){return arg;}}while(0)
+#define CheckWithText(fmt,arg...) do{ \
+    if(ERR_CODE[get_pid()] != OS_SUCCES){   \
+        debug_printf(fmt,##arg);    \
+        hlt_loop(); \
+    }}while(0)
+#define RetErr(arg) do  \
+{   \
+    ERR_CODE[get_pid()] = OS_FAILED;    \
+    return arg; \
+}while(0);
+#define RetSucces(arg) do  \
+{   \
+    ERR_CODE[get_pid()] = OS_SUCCES;    \
+    return arg; \
+}while(0);
+
 
 #define OS_SUCCES 0
 #define OS_FAILED 1	
 
 #define max_process 64
+
+#define kernel_pid 0
 
 
 typedef unsigned long long size_t;
@@ -43,3 +72,4 @@ void set_tss64(unsigned long rsp0,unsigned long rsp1,unsigned long rsp2,unsigned
 unsigned long ist4,unsigned long ist5,unsigned long ist6,unsigned long ist7);
 
 uint16_t get_pid();
+void ker_panic();

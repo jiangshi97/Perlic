@@ -11,7 +11,7 @@ kNode *create_list_by_array(kNode nodes[], uint64_t num)
     nodes[num].succ = null_ptr;
     return &(nodes[0]);
 }
-kNode *find_node_by_num(kNode *node, uint64_t num)
+_OS_API kNode *find_node_by_num(kNode *node, uint64_t num)
 {
     kNode *now = node;
     if(now == null_ptr)

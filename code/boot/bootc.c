@@ -7,6 +7,7 @@
 #include "test.h"
 #include "gate.h"
 #include "mem.h"
+#include "video.h"
 #include "memlib.h"
 
 #define KerSucces 0
@@ -17,6 +18,9 @@ extern uint32_t ebx_bootinf;
 
 void KerErr(uint16_t errcode);
 void ker_panic();
+
+_OS_API void link_pagetab(void *vir_addr, void *phy_addr, uint8_t pcid);
+
 extern void *_start;
 extern void *prt; 
 uint16_t setBootinfs(volatile uint8_t *bootinf);
@@ -57,8 +61,10 @@ void KernelMain(void)
     }
     IntInit();
     mem_init(bootinfs.mem_info_size, bootinfs.mem_info);
+    video_init(&(bootinfs.fb_inf), &(bootinfs.color_info));
 
     debug_printf("Kernel process sleep\n");
+
     while(1){asm_hlt();}
 }
 
@@ -89,26 +95,26 @@ uint16_t setBootinfs(volatile uint8_t *bootinf)
                 //serial_printf("mem_upper:0x%x\n",bootinfs.mem_upper);
                 break;
             case 8:
-                bootinfs.framebuffer_addr = *(uintptr_t *)(bootinf + 8) + 0xffff800000000000;
-                bootinfs.framebuffer_pitch = *(uint32_t *)(bootinf + 16);
-                bootinfs.framebuffer_width = *(uint32_t *)(bootinf + 20);
-                bootinfs.framebuffer_height = *(uint32_t *)(bootinf + 24);
-                bootinfs.framebuffer_bpp = *(uint8_t *)(bootinf + 28);
-                bootinfs.framebuffer_type = *(uint8_t *)(bootinf + 29);
-                serial_printf("framebuffer_addr: 0x%x\n", bootinfs.framebuffer_addr);
+                bootinfs.fb_inf.framebuffer_addr = *(uintptr_t *)(bootinf + 8) + 0xffff800000000000;
+                bootinfs.fb_inf.framebuffer_pitch = *(uint32_t *)(bootinf + 16);
+                bootinfs.fb_inf.framebuffer_width = *(uint32_t *)(bootinf + 20);
+                bootinfs.fb_inf.framebuffer_height = *(uint32_t *)(bootinf + 24);
+                bootinfs.fb_inf.framebuffer_bpp = *(uint8_t *)(bootinf + 28);
+                bootinfs.fb_inf.framebuffer_type = *(uint8_t *)(bootinf + 29);
+                serial_printf("framebuffer_addr: 0x%x\n", bootinfs.fb_inf.framebuffer_addr);
                 //serial_printf("framebuffer_bpp: %d\n", bootinfs.framebuffer_bpp);
-                if(bootinfs.framebuffer_type != 1)
+                if(bootinfs.fb_inf.framebuffer_type != 1)
                 {
                     return ColorErr;
                 }
-                if(bootinfs.framebuffer_type == 1)
-                {
-                    bootinfs.color_info.framebuffer_red_field_position = *(uint8_t *)(bootinf + 31);
-                    bootinfs.color_info.framebuffer_red_mask_size = *(uint8_t *)(bootinf + 32);
-                    bootinfs.color_info.framebuffer_green_field_position = *(uint8_t *)(bootinf + 33);
-                    bootinfs.color_info.framebuffer_green_mask_size = *(uint8_t *)(bootinf + 34);
-                    bootinfs.color_info.framebuffer_blue_field_position = *(uint8_t *)(bootinf + 35);
-                    bootinfs.color_info.framebuffer_blue_mask_size = *(uint8_t *)(bootinf + 36);
+                if(bootinfs.fb_inf.framebuffer_type == 1)
+                {   //This part is against the Multiboot2 Specificatio??????
+                    bootinfs.color_info.framebuffer_red_field_position = *(uint8_t *)(bootinf + 32);
+                    bootinfs.color_info.framebuffer_red_mask_size = *(uint8_t *)(bootinf + 33);
+                    bootinfs.color_info.framebuffer_green_field_position = *(uint8_t *)(bootinf + 34);
+                    bootinfs.color_info.framebuffer_green_mask_size = *(uint8_t *)(bootinf + 35);
+                    bootinfs.color_info.framebuffer_blue_field_position = *(uint8_t *)(bootinf + 36);
+                    bootinfs.color_info.framebuffer_blue_mask_size = *(uint8_t *)(bootinf + 37);
                 }
                 break;
             case 6:
