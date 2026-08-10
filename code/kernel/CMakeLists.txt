@@ -5,6 +5,7 @@ add_library(kernel_obj OBJECT
     mem.c
     lib.c
     klib.c
+    video.c
     traps.asm
     # ... 其他汇编文件
 )
@@ -14,7 +15,7 @@ add_library(kernel_obj OBJECT
 set_source_files_properties(traps.asm PROPERTIES LANGUAGE ASM_NASM)
 
 target_compile_options(kernel_obj PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-ffreestanding -fno-stack-protector -fno-builtin>
+    $<$<COMPILE_LANGUAGE:C>:-ffreestanding -fno-stack-protector -fno-builtin -Werror>
 )
 
 target_include_directories(kernel_obj PUBLIC

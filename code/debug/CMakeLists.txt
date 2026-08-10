@@ -6,7 +6,7 @@ add_library(debug_obj OBJECT
 )
 
 target_compile_options(debug_obj PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-ffreestanding -fno-stack-protector -fno-builtin>
+    $<$<COMPILE_LANGUAGE:C>:-ffreestanding -fno-stack-protector -fno-builtin -Werror>
 )
 
 target_include_directories(debug_obj PUBLIC

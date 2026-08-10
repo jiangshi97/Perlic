@@ -226,10 +226,12 @@ TSS64_BASE:
 
 align 0x1000
 global _PML4E
+global _PDPTE
+global _PDE
 _PML4E: ;temporary page table
     dq (_PDPTE + 7 - 0xffff800000000000)
     times 255 dq 0
-    dq (_PDPTE + 7 - 0xffff800000000000)
+    dq (_PDPTE2 + 7 - 0xffff800000000000)
     times 255 dq 0
 
 align 0x1000
@@ -239,6 +241,27 @@ _PDPTE:
 
 align 0x1000
 _PDE:
+    dq 0x000083
+    dq 0x200083
+    dq 0x400083
+    dq 0x600083
+    dq 0x800083
+    dq 0xa00083
+    dq 0xc00083
+    dq 0xe00083
+    dq 0x1000083
+    dq 0x1200083
+    dq 0x1400083
+    dq 0x1600083
+    dq 0x1800083
+    times 499 dq 0
+align 0x1000
+_PDPTE2:
+    dq (_PDE2 + 3 - 0xffff800000000000)
+    times 511 dq 0
+
+align 0x1000
+_PDE2:
     dq 0x000083
     dq 0x200083
     dq 0x400083
