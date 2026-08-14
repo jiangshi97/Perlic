@@ -6,6 +6,8 @@ add_library(kernel_obj OBJECT
     lib.c
     klib.c
     video.c
+    tty.c
+    hankaku.c
     traps.asm
     # ... 其他汇编文件
 )

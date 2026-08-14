@@ -4,7 +4,7 @@ BITS 64
 extern do_divide_error
 extern do_nmi
 extern do_overflow
-;extern do_bounds
+extern do_bounds
 extern do_double_fault
 extern do_coprocessor_segment_overrun
 extern do_segment_not_present
@@ -14,12 +14,19 @@ extern do_page_fault
 extern do_alignment_check
 extern do_machine_check
 extern do_SIMD_exception
+extern do_debug
+extern do_int3
+extern do_undefined_opcode
+extern do_dev_not_available
+extern do_invalid_TSS
+extern do_x87_FPU_error
+extern do_virtualization_exception
 extern do_unknown_error
 extern unknown_error
 
 global divide_error
 global overflow
-;global bounds
+global bounds
 global double_fault
 global coprocessor_segment_overrun
 global segment_not_present
@@ -30,7 +37,13 @@ global alignment_check
 global machine_check
 global SIMD_exception
 global nmi
-
+global debug
+global int3
+global undefined_opcode
+global dev_not_available
+global invalid_TSS
+global x87_FPU_error
+global virtualization_exception
 
 RESTORE_ALL:
 	pop	r15;		
@@ -200,6 +213,61 @@ SIMD_exception:
 	push qword 0
 	push rax
 	lea rax, [rel do_SIMD_exception]
+	xchg [rsp], rax
+	jmp error_code
+
+debug:
+	push qword 0
+	push rax
+	lea rax, [rel do_debug]
+	xchg [rsp], rax
+	jmp error_code
+
+int3:
+	push qword 0
+	push rax
+	lea rax, [rel do_int3]
+	xchg [rsp], rax
+	jmp error_code
+
+undefined_opcode:
+	push qword 0
+	push rax
+	lea rax, [rel do_undefined_opcode]
+	xchg [rsp], rax
+	jmp error_code
+
+dev_not_available:
+	push qword 0
+	push rax
+	lea rax, [rel do_dev_not_available]
+	xchg [rsp], rax
+	jmp error_code
+
+invalid_TSS:
+	push rax
+	lea rax, [rel do_invalid_TSS]
+	xchg [rsp], rax
+	jmp error_code
+
+x87_FPU_error:
+	push qword 0
+	push rax
+	lea rax, [rel do_x87_FPU_error]
+	xchg [rsp], rax
+	jmp error_code
+
+virtualization_exception:
+	push qword 0
+	push rax
+	lea rax, [rel do_virtualization_exception]
+	xchg [rsp], rax
+	jmp error_code
+
+bounds:
+	push qword 0
+	push rax
+	lea rax, [rel do_bounds]
 	xchg [rsp], rax
 	jmp error_code
 

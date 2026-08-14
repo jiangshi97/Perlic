@@ -1,6 +1,7 @@
 #pragma once
 
 #include "sprint.h"
+#include "tty.h"
 
 #define serial_printf(fmt,arg...)   ({\
     tsprintf((char *)&string_buff,fmt,##arg);\
@@ -16,5 +17,10 @@ extern uint8_t is_set_screen;
 #define debug_printf(fmt,arg...) {  \
     if(is_set_screen == 0){\
         serial_printf(fmt,##arg);\
+    }\
+    else\
+    {\
+        serial_printf(fmt,##arg);\
+        tty_printf(fmt,##arg);\
     }\
 }while(0)

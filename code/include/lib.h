@@ -41,6 +41,18 @@ do{									\
     return arg; \
 }while(0);
 
+#define up_to_add_one(ptr, up_num, last_num) do \
+{   \
+    if((*(ptr)) >= (up_num))    \
+    {   \
+        (*(ptr)) = (last_num);  \
+    }   \
+    else    \
+    {   \
+        (*(ptr)) += 1;  \
+    }   \
+}while(0); 
+
 
 #define OS_SUCCES 0
 #define OS_FAILED 1	
@@ -73,3 +85,5 @@ unsigned long ist4,unsigned long ist5,unsigned long ist6,unsigned long ist7);
 
 uint16_t get_pid();
 void ker_panic();
+_OS_API void **init_darray(uint32_t x, uint32_t y, size_t size);
+void *kmemset(void *s, unsigned char c, size_t n);

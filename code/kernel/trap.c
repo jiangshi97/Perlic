@@ -8,6 +8,12 @@
 
 void debug_print_IDT(gate_struct *tab,int low,int high);
 
+
+void do_bounds(struct pt_regs * regs,unsigned long error_code)
+{
+	debug_printf("bounds happen!! rip:0x%x\n",regs->rip);
+	while(1){asm_hlt();}
+}
 void do_divide_error(struct pt_regs * regs,unsigned long error_code)
 {
 	debug_printf("divide_error happen!! rip:0x%x\n",regs->rip);
@@ -93,31 +99,62 @@ void unknown_error(void)
 	serial_puts("unknown_interruption!\n");
 }
 
+void do_debug(struct pt_regs * regs,unsigned long error_code)
+{
+	debug_printf("debug happen!! rip:0x%x\n",regs->rip);
+	while(1){asm_hlt();}
+}
+void do_int3(struct pt_regs * regs,unsigned long error_code)
+{
+	debug_printf("int3 happen!! rip:0x%x\n",regs->rip);
+	while(1){asm_hlt();}
+}
+void do_undefined_opcode(struct pt_regs * regs,unsigned long error_code)
+{
+	debug_printf("undefined_opcode happen!! rip:0x%lx\n",regs->rip);
+	while(1){asm_hlt();}
+}
+void do_dev_not_available(struct pt_regs * regs,unsigned long error_code)
+{
+	debug_printf("dev_not_available happen!! rip:0x%x\n",regs->rip);
+	while(1){asm_hlt();}
+}
+void do_x87_FPU_error(struct pt_regs * regs,unsigned long error_code)
+{
+	debug_printf("x87_FPU_error happen!! rip:0x%x\n",regs->rip);
+	while(1){asm_hlt();}
+}
+void do_virtualization_exception(struct pt_regs * regs,unsigned long error_code)
+{
+	debug_printf("virtualization_exception happen!! rip:0x%x\n",regs->rip);
+	while(1){asm_hlt();}
+}
+
 extern void ignore_int();
 
 void sys_vector_init()
 {
 	set_trap_gate(0,1,divide_error);
-	//set_trap_gate(1,1,debug);
+	set_trap_gate(1,1,debug);
 	set_intr_gate(2,1,nmi);
-	//set_system_gate(3,1,int3);
+	set_system_gate(3,1,int3);
 	set_system_gate(4,1,overflow);
-	//set_system_gate(5,1,bounds);
-	//set_trap_gate(6,1,undefined_opcode);
-	//set_trap_gate(7,1,dev_not_available);
+	set_system_gate(5,1,bounds);
+	set_trap_gate(6,1,undefined_opcode);
+	set_trap_gate(7,1,dev_not_available);
 	set_trap_gate(8,1,double_fault);
 	set_trap_gate(9,1,coprocessor_segment_overrun);
-	//set_trap_gate(10,1,invalid_TSS);
+	set_trap_gate(10,1,invalid_TSS);
 	set_trap_gate(11,1,segment_not_present);
 	set_trap_gate(12,1,stack_segment_fault);
 	set_trap_gate(13,1,general_protection);
 	set_trap_gate(14,1,page_fault);
 	//15 Intel reserved. Do not use.
-	//set_trap_gate(16,1,x87_FPU_error);
+	set_trap_gate(16,1,x87_FPU_error);
 	set_trap_gate(17,1,alignment_check);
 	set_trap_gate(18,1,machine_check);
 	set_trap_gate(19,1,SIMD_exception);	
-	//set_trap_gate(20,1,virtualization_exception);
+	set_trap_gate(20,1,virtualization_exception);
 	//set_system_gate(SYSTEM_CALL_VECTOR,7,system_call);
 
 	__asm__ __volatile__("lidt %0"::"m"(IDT_POINTER):"memory");

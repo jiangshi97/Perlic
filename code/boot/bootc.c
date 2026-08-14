@@ -9,6 +9,7 @@
 #include "mem.h"
 #include "video.h"
 #include "memlib.h"
+#include "tty.h"
 
 #define KerSucces 0
 #define LoadErr 1
@@ -62,6 +63,7 @@ void KernelMain(void)
     IntInit();
     mem_init(bootinfs.mem_info_size, bootinfs.mem_info);
     video_init(&(bootinfs.fb_inf), &(bootinfs.color_info));
+    tty_init();
 
     debug_printf("Kernel process sleep\n");
 

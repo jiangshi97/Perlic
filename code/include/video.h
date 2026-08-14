@@ -48,6 +48,13 @@ typedef struct
     uint32_t purple;
     uint32_t grey;
     uint32_t orange;
+    uint32_t white;
+    uint32_t black;
 } color_pixels;
 
 _OS_API void video_init(framebuffer_inf *fb, boot_color_info *ci);
+_OS_API void drawPoint(uint32_t x, uint32_t y, uint32_t pixel);
+_OS_API void drawRect(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint32_t pixel);
+
+extern color_pixels pixels;
+extern framebuffer_inf *fb_inf;

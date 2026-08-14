@@ -1,6 +1,7 @@
 add_library(debug_obj OBJECT
     serial.c
     sprint.c
+    comp.c
     test.c
     # ... 其他汇编文件
 )

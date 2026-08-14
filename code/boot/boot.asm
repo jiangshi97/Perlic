@@ -127,6 +127,12 @@ Setup_TSS64:
     shr rdx, 32
     mov [rdi + 88], rdx
 
+
+    mov rax, cr4
+    or  rax, 0x200        
+    or  rax, 0x400         
+    mov cr4, rax
+
 extern KernelMain
     jmp KernelMain
 Loop2:
