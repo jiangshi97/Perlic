@@ -23,7 +23,7 @@ static inline void font_init()
     }
 }
 
-static inline void draw_letter(uint32_t x, uint32_t y, unsigned char letter)
+static inline void draw_letter(uint32_t x, uint32_t y, char letter)
 {
     //debug_printf("draw to (%d, %d) tty_x is %d tty_y is %d up_line is %d\n", x, y, tty_x, tty_y, up_line);
     uint32_t b_x, b_y;
@@ -57,6 +57,10 @@ void framebuffer_refresh()
                 now = tty_buffer[a][b];
                 if(now == 0)
                 {
+                    for(uint64_t c = b; c < tty_width; c++)
+                    {
+                        draw_letter(c, a - up_line, ' ');
+                    }
                     break;
                 }
                 else
@@ -75,6 +79,10 @@ void framebuffer_refresh()
                 now = tty_buffer[a][b];
                 if(now == 0)
                 {
+                    for(uint64_t c = b; c < tty_width; c++)
+                    {
+                        draw_letter(c, a - up_line, ' ');
+                    }
                     break;
                 }
                 else
@@ -90,6 +98,10 @@ void framebuffer_refresh()
                 now = tty_buffer[a][b];
                 if(now == 0)
                 {
+                    for(uint64_t c = b; c < tty_width; c++)
+                    {
+                        draw_letter(c, a + tty_height - up_line + 1, ' ');
+                    }
                     break;
                 }
                 else
@@ -124,7 +136,7 @@ static inline void change_line()
     }
 }
 
-void tty_putchar(unsigned char letter)
+void tty_putchar(char letter)
 {
     if(letter <= 31 || letter == 127)
     {
@@ -161,7 +173,7 @@ void tty_putchar(unsigned char letter)
     }
 }
 
-void tty_puts(const unsigned char *str)
+void tty_puts(const char *str)
 {
     const unsigned char *now = str;
     while(1)

@@ -1,3 +1,4 @@
+
 void divide_error();
 void nmi();
 void overflow();
@@ -24,3 +25,4 @@ void dev_not_available();
 void invalid_TSS();
 void x87_FPU_error();
 void virtualization_exception();
+

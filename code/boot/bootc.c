@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "serial.h"
+#include "kernel/serial.h"
 #include "bootc.h"
 #include "sprint.h"
 #include "lib.h"
@@ -10,6 +10,8 @@
 #include "video.h"
 #include "memlib.h"
 #include "tty.h"
+#include "driver.h"
+#include "klib.h"
 
 #define KerSucces 0
 #define LoadErr 1
@@ -64,8 +66,13 @@ void KernelMain(void)
     mem_init(bootinfs.mem_info_size, bootinfs.mem_info);
     video_init(&(bootinfs.fb_inf), &(bootinfs.color_info));
     tty_init();
+    driver_init();
+
+    while (1){}
+    
 
     debug_printf("Kernel process sleep\n");
+
 
     while(1){asm_hlt();}
 }

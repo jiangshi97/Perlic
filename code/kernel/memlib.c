@@ -233,7 +233,7 @@ _OS_API void *kmalloc(size_t size)
     }
     else
     {
-        debug_printf("Failed to allocate memory > 2mib\n")
+        debug_printf("Failed to allocate memory > 2mib\n");
         ERR_CODE[get_pid()] = OS_FAILED;
         return null_ptr;
     }

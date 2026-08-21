@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdarg.h>
+#include <stdint.h>
 extern uint8_t string_buff;
 
 int skip_atoi(const char **s);

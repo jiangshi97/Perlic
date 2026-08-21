@@ -8,6 +8,7 @@ add_library(kernel_obj OBJECT
     video.c
     tty.c
     hankaku.c
+    driver.c
     traps.asm
     # ... 其他汇编文件
 )
@@ -22,4 +23,9 @@ target_compile_options(kernel_obj PRIVATE
 
 target_include_directories(kernel_obj PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/kernel
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/driver
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/cpplib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/clib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/boot
 )

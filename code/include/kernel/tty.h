@@ -13,5 +13,5 @@ extern unsigned char hankaku_bin[];
 extern unsigned int hankaku_bin_len;
 
 _OS_API void tty_init();
-void tty_puts(const unsigned char *str);
-void tty_putchar(unsigned char letter);
+void tty_puts(const char *str);
+void tty_putchar(char letter);

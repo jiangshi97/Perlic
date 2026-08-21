@@ -132,18 +132,18 @@ _OS_API void link_pagetab(void *vir_addr, void *phy_addr, uint8_t pcid)
     pdpt = (((uintptr_t)vir_addr) & 0x7FC0000000ULL) >> 30;
     pdt = (((uintptr_t)vir_addr) & 0x3FE00000ULL) >> 21;
     index = (((uintptr_t)vir_addr) & 0x1FFFFFULL);
-    debug_printf("pml4:0x%x pdpt:0x%x, pdt:0x%x, index:0x%x\n", pml4, pdpt, pdt, index);
+    //debug_printf("pml4:0x%x pdpt:0x%x, pdt:0x%x, index:0x%x\n", pml4, pdpt, pdt, index);
     uint64_t *PDPTE = (uint64_t *)(PhyToVir((_PML4E[pml4] & 0xFFFFFFFFFFFFF000)));
     uint64_t *PDE;
-    debug_printf("_PML4E:0x%x\n", _PML4E);
-    debug_printf("_PML4E[0]:0x%x\n", _PML4E[0]);
-    debug_printf("_PDPTE:0x%x\n", _PDPTE);
-    debug_printf("_PDPTE[0]:0x%x\n", _PDPTE[0]);
-    debug_printf("_PDE[0]:0x%x\n", _PDE[0]);
-    debug_printf("_PDE[1]:0x%x\n", _PDE[1]);
+    //debug_printf("_PML4E:0x%x\n", _PML4E);
+    //debug_printf("_PML4E[0]:0x%x\n", _PML4E[0]);
+    //debug_printf("_PDPTE:0x%x\n", _PDPTE);
+    //debug_printf("_PDPTE[0]:0x%x\n", _PDPTE[0]);
+    //debug_printf("_PDE[0]:0x%x\n", _PDE[0]);
+    //debug_printf("_PDE[1]:0x%x\n", _PDE[1]);
     if(PDPTE == PhyToVir(null_ptr))
     {
-        debug_printf("a\n");
+        //debug_printf("a\n");
         PDPTE = kmallocWithAlign_init(2 * page_tab_size, page_tab_align_num);
         CheckWithRet();
         PDE = (uint64_t *)((uintptr_t)PDPTE + page_tab_size);
@@ -153,28 +153,28 @@ _OS_API void link_pagetab(void *vir_addr, void *phy_addr, uint8_t pcid)
     }
     else
     {
-        debug_printf("b\n");
-        debug_printf("PDPTE: 0x%x\n", PDPTE);
+        //debug_printf("b\n");
+        //debug_printf("PDPTE: 0x%x\n", PDPTE);
         PDE = (uint64_t *)(PhyToVir((PDPTE[pdpt] & 0xFFFFFFFFFFFFF000)));
         if(PDE == PhyToVir(null_ptr))
         {
-            debug_printf("c\n");
+            //debug_printf("c\n");
             PDE = kmallocWithAlign_init(page_tab_size, page_tab_align_num);
-            debug_printf("PDE:0x%lx\n", PDE);
+            //debug_printf("PDE:0x%lx\n", PDE);
             CheckWithRet();
             PDPTE[pdpt] = (uintptr_t)VirToPhy(PDE) | 0x23;
         }
         PDE[pdt] = (uintptr_t)phy_addr | pcid;
-        debug_printf("hello\n0x%x\n0x%x\n", PDE[pdt - 1], PDE[pdt]);
+        //debug_printf("hello\n0x%x\n0x%x\n", PDE[pdt - 1], PDE[pdt]);
     }
-    debug_printf("\n_PML4E[pml4]:0x%lx\nPDPTE[pdpt]:0x%lx\nPDE[pdt]:0x%lx\n", _PML4E[pml4], PDPTE[pdpt], PDE[pdt]);
+    //debug_printf("\n_PML4E[pml4]:0x%lx\nPDPTE[pdpt]:0x%lx\nPDE[pdt]:0x%lx\n", _PML4E[pml4], PDPTE[pdpt], PDE[pdt]);
     RetSucces();
 }
 
 void framebuffer_init(void *frame_addr)
 {
     pMemPage *destp = FindpPage(VirToPhy(frame_addr));
-    if(ERR_CODE != OS_SUCCES)
+    if(ERR_CODE[get_pid()] != OS_SUCCES)
     {
         destp = kmalloc(sizeof(pMemPage));
         CheckWithRet();

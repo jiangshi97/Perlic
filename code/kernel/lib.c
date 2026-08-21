@@ -82,3 +82,19 @@ void *kmemset(void *s, unsigned char c, size_t n)
 		}
 	}
 };
+
+void wait_write(uint8_t port, uint8_t ibf)
+{
+    while (inb(port) & ibf) {
+        // 让出CPU或空转
+        asm volatile("pause");
+    }
+}
+
+void wait_read(uint8_t port, uint8_t ibf)
+{
+    while (!inb(port) & ibf) {
+        // 让出CPU或空转
+        asm volatile("pause");
+    }
+}

@@ -3,7 +3,7 @@ set(CMAKE_ASM_NASM_COMPILER nasm)
 # 根目录 CMakeLists.txt
 cmake_minimum_required(VERSION 3.13)
 # 声明项目，支持 C 和汇编语言
-project(Perlic C ASM_NASM)
+project(Perlic C ASM_NASM CXX)
 
 # 启用汇编语言支持
 enable_language(ASM)
@@ -12,17 +12,24 @@ enable_language(ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+set(CMAKE_CXX_STANDARD 11)          # 根据喜好选择 11/14/17/20
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 
 # 添加子目录，实现模块化管理
 add_subdirectory(code/boot)
 add_subdirectory(code/debug)
 add_subdirectory(code/kernel)
+add_subdirectory(code/kernel_driver)
+add_subdirectory(code/cpplib)
 
 # 创建最终的内核可执行文件目标
 add_executable(kernel
+    $<TARGET_OBJECTS:cpplib_obj>
     $<TARGET_OBJECTS:boot_obj>
     $<TARGET_OBJECTS:debug_obj>
-    $<TARGET_OBJECTS:kernel_obj>)
+    $<TARGET_OBJECTS:kernel_obj>
+    $<TARGET_OBJECTS:kernel_driver_obj>)
 
 
 

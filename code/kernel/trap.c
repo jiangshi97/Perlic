@@ -5,10 +5,32 @@
 #include "sprint.h"
 #include "lib.h"
 #include "debug.h"
+#include "pic.h"
+
+static void *IRQ_vector[IRQ_count] = {
+	irq0, irq1, irq2, irq3, irq4, irq5, irq6, irq7, irq8, irq9, irq10, irq11, irq12, irq13, irq14, irq15  
+};
+
+void_func_ptr keyboard_func;
 
 void debug_print_IDT(gate_struct *tab,int low,int high);
 
+void do_irq(struct pt_regs * regs,unsigned long irq_code)
+{
+	switch (irq_code)
+	{
+	case keyboard_irq:
+		keyboard_func();
+		break;
+	
+	default:
+		debug_printf("Error:unknown irq:%ld\n", irq_code);
+		break;
+	}
 
+	//hlt_loop();
+	send_eoi(irq_code);
+}
 void do_bounds(struct pt_regs * regs,unsigned long error_code)
 {
 	debug_printf("bounds happen!! rip:0x%x\n",regs->rip);
@@ -25,8 +47,6 @@ void do_nmi(struct pt_regs * regs,unsigned long error_code)
 	debug_printf("nmi happen!! rip:0x%x\n",regs->rip);
 	while(1){asm_hlt();}
 }
-
-//void do_int3(struct pt_regs * regs,unsigned long error_code)
 
 void do_overflow(struct pt_regs * regs,unsigned long error_code)
 {
@@ -156,6 +176,11 @@ void sys_vector_init()
 	set_trap_gate(19,1,SIMD_exception);	
 	set_trap_gate(20,1,virtualization_exception);
 	//set_system_gate(SYSTEM_CALL_VECTOR,7,system_call);
+
+	for(uint8_t a = 0; a < IRQ_count; a++)
+	{
+		set_intr_gate(IRQ_base + a, 0, IRQ_vector[a]);
+	}
 
 	__asm__ __volatile__("lidt %0"::"m"(IDT_POINTER):"memory");
 }

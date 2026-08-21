@@ -15,4 +15,9 @@ set_source_files_properties(boot.asm PROPERTIES LANGUAGE ASM_NASM)
 
 target_include_directories(boot_obj PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/kernel
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/driver
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/cpplib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/clib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/boot
 )
