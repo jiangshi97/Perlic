@@ -22,6 +22,7 @@ extern do_invalid_TSS
 extern do_x87_FPU_error
 extern do_virtualization_exception
 extern do_unknown_error
+extern do_irq
 extern unknown_error
 
 global divide_error
@@ -303,3 +304,32 @@ wCS	equ	0xa0
 RFLAGS	equ	0xa8
 OLDRSP	equ	0xb0
 OLDSS	equ	0xb8
+
+%macro IRQ_STUB 1
+global irq%1
+
+irq%1:
+	push qword %1
+	push rax
+	lea rax, [rel do_irq]
+	xchg [rsp], rax
+	jmp error_code
+
+%endmacro
+
+IRQ_STUB 0
+IRQ_STUB 1
+IRQ_STUB 2
+IRQ_STUB 3
+IRQ_STUB 4
+IRQ_STUB 5
+IRQ_STUB 6
+IRQ_STUB 7
+IRQ_STUB 8
+IRQ_STUB 9
+IRQ_STUB 10
+IRQ_STUB 11
+IRQ_STUB 12
+IRQ_STUB 13
+IRQ_STUB 14
+IRQ_STUB 15
