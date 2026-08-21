@@ -12,4 +12,9 @@ target_compile_options(debug_obj PRIVATE
 
 target_include_directories(debug_obj PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/kernel
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/driver
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/cpplib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/clib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/boot
 )
